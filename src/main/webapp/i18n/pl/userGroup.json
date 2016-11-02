@@ -2,8 +2,8 @@
     "splitItApp": {
         "userGroup" : {
             "home": {
-                "title": "Grupy",
-                "createLabel": "Dodaj grupę",
+                "title": "User Groups",
+                "createLabel": "Dodaj User Group",
                 "createOrEditLabel": "Dodaj lub edytuj: User Group",
                 "search": "Search for User Group"
             },

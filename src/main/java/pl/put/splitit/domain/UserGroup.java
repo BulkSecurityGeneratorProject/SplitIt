@@ -48,7 +48,6 @@ public class UserGroup implements Serializable {
                inverseJoinColumns = @JoinColumn(name="users_id", referencedColumnName="ID"))
     private Set<User> users = new HashSet<>();
 
-
     public Long getId() {
         return id;
     }

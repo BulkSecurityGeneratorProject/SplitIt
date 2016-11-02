@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+   <changeSet author="Krystek (generated)" id="1478106323463-1">
+      <addColumn tableName="transaction">
+         <column name="user_group_id" type="bigint"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-2">
+      <addForeignKeyConstraint baseColumnNames="user_group_id"
+                               baseTableName="transaction"
+                               constraintName="FK_rna093wxjl8wtfh111ccwfba0"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="user_group"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-3">
+      <dropForeignKeyConstraint baseTableName="OAUTH_ACCESS_TOKEN"
+                                constraintName="FK_OAUTH_ACCESS_TOKEN_USER_NAME"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-4">
+      <dropForeignKeyConstraint baseTableName="OAUTH_CLIENT_TOKEN"
+                                constraintName="FK_OAUTH_CLIENT_TOKEN_USER_NAME"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-5">
+      <dropTable tableName="OAUTH_ACCESS_TOKEN"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-6">
+      <dropTable tableName="OAUTH_APPROVALS"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-7">
+      <dropTable tableName="OAUTH_CLIENT_DETAILS"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-8">
+      <dropTable tableName="OAUTH_CLIENT_TOKEN"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-9">
+      <dropTable tableName="OAUTH_CODE"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-10">
+      <dropTable tableName="OAUTH_REFRESH_TOKEN"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-11">
+      <dropDefaultValue columnDataType="timestamp"
+                        columnName="created_date"
+                        tableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-12">
+      <dropNotNullConstraint columnDataType="bigint"
+                             columnName="debitor_id"
+                             tableName="transaction"/>
+   </changeSet>
+   <changeSet author="Krystek (generated)" id="1478106323463-13">
+      <dropNotNullConstraint columnDataType="bigint"
+                             columnName="owner_id"
+                             tableName="user_group"/>
+   </changeSet>
+</databaseChangeLog>

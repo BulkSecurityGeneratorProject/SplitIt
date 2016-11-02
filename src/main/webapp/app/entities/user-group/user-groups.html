@@ -6,7 +6,9 @@
             <div class="col-xs-4 no-padding-left">
                 <button class="btn btn-primary" ui-sref="user-group.new" >
                     <span class="glyphicon glyphicon-plus"></span>
-                    <span  data-translate="splitItApp.userGroup.home.createLabel">Create new Group</span>
+                    <span  data-translate="splitItApp.userGroup.home.createLabel">
+                        Create new User Group
+                    </span>
                 </button>
             </div>
         </div>
@@ -16,19 +18,23 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="name"><span data-translate="splitItApp.userGroup.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="owner.login"><span data-translate="splitItApp.userGroup.owner">Owner</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="isPrivate"><span data-translate="splitItApp.userGroup.isPrivate">Is Private</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="creationDate"><span data-translate="splitItApp.userGroup.creationDate">Creation Date</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="isPrivate"><span data-translate="splitItApp.userGroup.isPrivate">Is Private</span></th>
+                    <th jh-sort-by="owner.login"><span data-translate="splitItApp.userGroup.owner">Owner</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="userGroup in vm.userGroups track by userGroup.id">
-                    <td><a ui-sref="user-group-detail({id:userGroup.id})">{{userGroup.name}}</a></td>
-                    <td>{{userGroup.owner.login}}</td>
-                    <td>{{userGroup.creationDate | date:'mediumDate'}}</td>
+                    <td><a ui-sref="user-group-detail({id:userGroup.id})">{{userGroup.id}}</a></td>
+                    <td>{{userGroup.name}}</td>
                     <td>{{userGroup.isPrivate}}</td>
+                        <td>{{userGroup.creationDate | date:'mediumDate'}}</td>
+                    <td>
+                        {{userGroup.owner.login}}
+                    </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

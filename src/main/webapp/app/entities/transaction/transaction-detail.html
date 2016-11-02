@@ -28,6 +28,10 @@
         <dd>
             {{vm.transaction.creditor.login}}
         </dd>
+        <dt><span data-translate="splitItApp.transaction.userGroup">User Group</span></dt>
+        <dd>
+            <a ui-sref="user-group-detail({id:vm.transaction.userGroup.id})">{{vm.transaction.userGroup.name}}</a>
+        </dd>
     </dl>
 
     <button type="submit"
