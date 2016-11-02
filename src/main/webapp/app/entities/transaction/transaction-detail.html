@@ -1,0 +1,43 @@
+
+<div>
+    <h2><span data-translate="splitItApp.transaction.detail.title">Transaction</span> {{vm.transaction.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="splitItApp.transaction.name">Name</span></dt>
+        <dd>
+            <span>{{vm.transaction.name}}</span>
+        </dd>
+        <dt><span data-translate="splitItApp.transaction.description">Description</span></dt>
+        <dd>
+            <span>{{vm.transaction.description}}</span>
+        </dd>
+        <dt><span data-translate="splitItApp.transaction.date">Date</span></dt>
+        <dd>
+            <span>{{vm.transaction.date | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span data-translate="splitItApp.transaction.value">Value</span></dt>
+        <dd>
+            <span>{{vm.transaction.value}}</span>
+        </dd>
+        <dt><span data-translate="splitItApp.transaction.debitor">Debitor</span></dt>
+        <dd>
+            {{vm.transaction.debitor.login}}
+        </dd>
+        <dt><span data-translate="splitItApp.transaction.creditor">Creditor</span></dt>
+        <dd>
+            {{vm.transaction.creditor.login}}
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="transaction-detail.edit({id:vm.transaction.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

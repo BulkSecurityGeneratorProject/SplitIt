@@ -1,0 +1,27 @@
+{
+    "splitItApp": {
+        "transaction" : {
+            "home": {
+                "title": "Transactions",
+                "createLabel": "Dodaj Transaction",
+                "createOrEditLabel": "Dodaj lub edytuj: Transaction",
+                "search": "Search for Transaction"
+            },
+            "created": "A new Transaction is created with identifier {{ param }}",
+            "updated": "A Transaction is updated with identifier {{ param }}",
+            "deleted": "A Transaction is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Czy na pewno chcesz usunąć Transaction {{ id }}?"
+            },
+            "detail": {
+                "title": "Transaction"
+            },
+            "name": "Name",
+            "description": "Description",
+            "date": "Date",
+            "value": "Value",
+            "debitor": "Debitor",
+            "creditor": "Creditor"
+        }
+    }
+}

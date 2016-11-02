@@ -1,0 +1,12 @@
+version: '2'
+services:
+    splitit-postgresql:
+        container_name: splitit-postgresql
+        image: postgres:9.5.4
+        # volumes:
+        #     - ~/volumes/jhipster/SplitIt/postgresql/:/var/lib/postgresql/
+        environment:
+            - POSTGRES_USER=SplitIt
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432

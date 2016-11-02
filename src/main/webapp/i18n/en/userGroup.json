@@ -1,0 +1,26 @@
+{
+    "splitItApp": {
+        "userGroup" : {
+            "home": {
+                "title": "Groups",
+                "createLabel": "Create new group",
+                "createOrEditLabel": "Create or edit a User Group",
+                "search": "Search for User Group"
+            },
+            "created": "A new User Group is created with identifier {{ param }}",
+            "updated": "A User Group is updated with identifier {{ param }}",
+            "deleted": "A User Group is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete User Group {{ id }}?"
+            },
+            "detail": {
+                "title": "User Group"
+            },
+            "name": "Name",
+            "isPrivate": "Is Private",
+            "creationDate": "Creation Date",
+            "owner": "Owner",
+            "users": "Users"
+        }
+    }
+}
