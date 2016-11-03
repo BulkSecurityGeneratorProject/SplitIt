@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.put.splitit.domain.Transaction;
+import pl.put.splitit.domain.UserGroup;
 import pl.put.splitit.repository.TransactionRepository;
 import pl.put.splitit.web.rest.TransactionType;
 
@@ -63,6 +64,12 @@ public class TransactionService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<Transaction> findAllByGroup(Long id, Pageable pageable) {
+        log.debug("Request to get all Transactions of group: " + id);
+        return transactionRepository.findAllByGroup(id, pageable);
+    }
+
 
     /**
      * Get one transaction by id.
@@ -86,4 +93,7 @@ public class TransactionService {
         log.debug("Request to delete Transaction : {}", id);
         transactionRepository.delete(id);
     }
+
+
+
 }

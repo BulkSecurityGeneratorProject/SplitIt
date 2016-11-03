@@ -4,12 +4,12 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A UserGroup.
@@ -44,8 +44,8 @@ public class UserGroup implements Serializable {
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "user_group_users",
-               joinColumns = @JoinColumn(name="user_groups_id", referencedColumnName="ID"),
-               inverseJoinColumns = @JoinColumn(name="users_id", referencedColumnName="ID"))
+        joinColumns = @JoinColumn(name = "user_groups_id", referencedColumnName = "ID"),
+        inverseJoinColumns = @JoinColumn(name = "users_id", referencedColumnName = "ID"))
     private Set<User> users = new HashSet<>();
 
     public Long getId() {
@@ -140,7 +140,7 @@ public class UserGroup implements Serializable {
             return false;
         }
         UserGroup userGroup = (UserGroup) o;
-        if(userGroup.id == null || id == null) {
+        if (userGroup.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, userGroup.id);

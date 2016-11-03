@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import pl.put.splitit.config.Constants;
 import pl.put.splitit.domain.Transaction;
 import pl.put.splitit.domain.User;
+import pl.put.splitit.domain.UserGroup;
 import pl.put.splitit.repository.UserRepository;
 import pl.put.splitit.security.AuthoritiesConstants;
 import pl.put.splitit.service.MailService;
 import pl.put.splitit.service.TransactionService;
+import pl.put.splitit.service.UserGroupService;
 import pl.put.splitit.service.UserService;
 import pl.put.splitit.web.rest.util.HeaderUtil;
 import pl.put.splitit.web.rest.util.PaginationUtil;
@@ -71,6 +73,9 @@ public class UserResource {
 
     @Inject
     private TransactionService transactionService;
+
+    @Inject
+    private UserGroupService userGroupService;
 
 
     /**
@@ -182,9 +187,29 @@ public class UserResource {
     }
 
 
+    @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/groups")
+    @Timed
+    public ResponseEntity<Page<UserGroup>> getUserGroups(@PathVariable String login, Pageable pageable) throws URISyntaxException {
+        log.debug("REST request to get groups of user: {}", login);
+        Optional<User> user = userService.getUserWithAuthoritiesByLogin(login);
+
+        // If there is no user with given name
+        if (!user.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Page<UserGroup> groups = userGroupService.findAllGroupsOfUser(login, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(groups, String.format("/api/users/%s/groups", login));
+        return new ResponseEntity<>(groups, headers, HttpStatus.OK);
+    }
+
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/transactions")
     @Timed
-    public ResponseEntity<Page<Transaction>> getUserTransactions(@PathVariable String login, @RequestParam(value = "type", required = false, defaultValue = "both") String transactionType, Pageable pageable) throws URISyntaxException {
+    public ResponseEntity<Page<Transaction>> getUserTransactions(
+        @PathVariable String login,
+        @RequestParam(value = "type", required = false, defaultValue = "both") String transactionType,
+        Pageable pageable) throws URISyntaxException {
+
         log.debug("REST request to get transactions of user: {}", login);
         Optional<User> user = userService.getUserWithAuthoritiesByLogin(login);
 
@@ -194,7 +219,7 @@ public class UserResource {
         }
 
         Page<Transaction> transactions = transactionService.findAllByUserAndType(login, TransactionType.getType(transactionType), pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(transactions, "/api/users/transactions");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(transactions, String.format("/api/users/%s/transactions", login));
         return new ResponseEntity<>(transactions, headers, HttpStatus.OK);
     }
 

@@ -29,4 +29,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query("select transaction from Transaction transaction where transaction.creditor.login = :login")
     Page<Transaction> findByCreditorAndUser(@Param("login") String login, Pageable pageable);
+
+    @Query("select transaction from Transaction transaction where transaction.userGroup.id = :id")
+    Page<Transaction> findAllByGroup(@Param("id") Long id, Pageable pageable);
 }
