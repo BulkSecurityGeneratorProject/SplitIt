@@ -29,18 +29,18 @@ import java.util.Optional;
 public class UserGroupResource {
 
     private final Logger log = LoggerFactory.getLogger(UserGroupResource.class);
-        
+
     @Inject
     private UserGroupService userGroupService;
 
     /**
-     * POST  /user-groups : Create a new userGroup.
+     * POST  /groups : Create a new userGroup.
      *
      * @param userGroup the userGroup to create
      * @return the ResponseEntity with status 201 (Created) and with body the new userGroup, or with status 400 (Bad Request) if the userGroup has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/user-groups")
+    @PostMapping("/groups")
     @Timed
     public ResponseEntity<UserGroup> createUserGroup(@Valid @RequestBody UserGroup userGroup) throws URISyntaxException {
         log.debug("REST request to save UserGroup : {}", userGroup);
@@ -48,13 +48,13 @@ public class UserGroupResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("userGroup", "idexists", "A new userGroup cannot already have an ID")).body(null);
         }
         UserGroup result = userGroupService.save(userGroup);
-        return ResponseEntity.created(new URI("/api/user-groups/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/groups/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("userGroup", result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /user-groups : Updates an existing userGroup.
+     * PUT  /groups : Updates an existing userGroup.
      *
      * @param userGroup the userGroup to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated userGroup,
@@ -62,7 +62,7 @@ public class UserGroupResource {
      * or with status 500 (Internal Server Error) if the userGroup couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/user-groups")
+    @PutMapping("/groups")
     @Timed
     public ResponseEntity<UserGroup> updateUserGroup(@Valid @RequestBody UserGroup userGroup) throws URISyntaxException {
         log.debug("REST request to update UserGroup : {}", userGroup);
@@ -76,29 +76,29 @@ public class UserGroupResource {
     }
 
     /**
-     * GET  /user-groups : get all the userGroups.
+     * GET  /groups : get all the userGroups.
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of userGroups in body
      * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
-    @GetMapping("/user-groups")
+    @GetMapping("/groups")
     @Timed
     public ResponseEntity<List<UserGroup>> getAllUserGroups(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of UserGroups");
         Page<UserGroup> page = userGroupService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/user-groups");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/groups");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**
-     * GET  /user-groups/:id : get the "id" userGroup.
+     * GET  /groups/:id : get the "id" userGroup.
      *
      * @param id the id of the userGroup to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the userGroup, or with status 404 (Not Found)
      */
-    @GetMapping("/user-groups/{id}")
+    @GetMapping("/groups/{id}")
     @Timed
     public ResponseEntity<UserGroup> getUserGroup(@PathVariable Long id) {
         log.debug("REST request to get UserGroup : {}", id);
@@ -111,12 +111,12 @@ public class UserGroupResource {
     }
 
     /**
-     * DELETE  /user-groups/:id : delete the "id" userGroup.
+     * DELETE  /groups/:id : delete the "id" userGroup.
      *
      * @param id the id of the userGroup to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/user-groups/{id}")
+    @DeleteMapping("/groups/{id}")
     @Timed
     public ResponseEntity<Void> deleteUserGroup(@PathVariable Long id) {
         log.debug("REST request to delete UserGroup : {}", id);

@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
-                <button class="btn btn-primary" ui-sref="user-group.new" >
+                <button class="btn btn-primary" ui-sref="group.new" >
                     <span class="glyphicon glyphicon-plus"></span>
                     <span  data-translate="splitItApp.userGroup.home.createLabel">
                         Create new User Group
@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="userGroup in vm.userGroups track by userGroup.id">
-                    <td><a ui-sref="user-group-detail({id:userGroup.id})">{{userGroup.id}}</a></td>
+                    <td><a ui-sref="group-detail({id:userGroup.id})">{{userGroup.id}}</a></td>
                     <td>{{userGroup.name}}</td>
                     <td>{{userGroup.isPrivate}}</td>
                         <td>{{userGroup.creationDate | date:'mediumDate'}}</td>
@@ -38,19 +38,19 @@
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
-                                    ui-sref="user-group-detail({id:userGroup.id})"
+                                    ui-sref="group-detail({id:userGroup.id})"
                                     class="btn btn-info btn-sm">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                                 <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
                             </button>
                             <button type="submit"
-                                    ui-sref="user-group.edit({id:userGroup.id})"
+                                    ui-sref="group.edit({id:userGroup.id})"
                                     class="btn btn-primary btn-sm">
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"></span>
                             </button>
                             <button type="submit"
-                                    ui-sref="user-group.delete({id:userGroup.id})"
+                                    ui-sref="group.delete({id:userGroup.id})"
                                     class="btn btn-danger btn-sm">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                                 <span class="hidden-xs hidden-sm" data-translate="entity.action.delete"></span>

@@ -7,7 +7,7 @@
     UserGroup.$inject = ['$resource', 'DateUtils'];
 
     function UserGroup ($resource, DateUtils) {
-        var resourceUrl =  'api/user-groups/:id';
+        var resourceUrl =  'api/groups/:id';
 
         return $resource(resourceUrl, {}, {
             'query': { method: 'GET', isArray: true},

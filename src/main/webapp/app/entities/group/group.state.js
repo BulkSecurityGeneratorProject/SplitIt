@@ -9,16 +9,16 @@
 
     function stateConfig($stateProvider) {
         $stateProvider
-        .state('user-group', {
+        .state('group', {
             parent: 'entity',
-            url: '/user-group?page&sort&search',
+            url: '/group?page&sort&search',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'splitItApp.userGroup.home.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/user-group/user-groups.html',
+                    templateUrl: 'app/entities/group/groups.html',
                     controller: 'UserGroupController',
                     controllerAs: 'vm'
                 }
@@ -51,16 +51,16 @@
                 }]
             }
         })
-        .state('user-group-detail', {
+        .state('group-detail', {
             parent: 'entity',
-            url: '/user-group/{id}',
+            url: '/group/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'splitItApp.userGroup.detail.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/user-group/user-group-detail.html',
+                    templateUrl: 'app/entities/group/group-detail.html',
                     controller: 'UserGroupDetailController',
                     controllerAs: 'vm'
                 }
@@ -75,7 +75,7 @@
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
-                        name: $state.current.name || 'user-group',
+                        name: $state.current.name || 'group',
                         params: $state.params,
                         url: $state.href($state.current.name, $state.params)
                     };
@@ -83,15 +83,15 @@
                 }]
             }
         })
-        .state('user-group-detail.edit', {
-            parent: 'user-group-detail',
+        .state('group-detail.edit', {
+            parent: 'group-detail',
             url: '/detail/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/user-group/user-group-dialog.html',
+                    templateUrl: 'app/entities/group/group-dialog.html',
                     controller: 'UserGroupDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
@@ -108,15 +108,15 @@
                 });
             }]
         })
-        .state('user-group.new', {
-            parent: 'user-group',
+        .state('group.new', {
+            parent: 'group',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/user-group/user-group-dialog.html',
+                    templateUrl: 'app/entities/group/group-dialog.html',
                     controller: 'UserGroupDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
@@ -132,21 +132,21 @@
                         }
                     }
                 }).result.then(function() {
-                    $state.go('user-group', null, { reload: 'user-group' });
+                    $state.go('group', null, { reload: 'group' });
                 }, function() {
-                    $state.go('user-group');
+                    $state.go('group');
                 });
             }]
         })
-        .state('user-group.edit', {
-            parent: 'user-group',
+        .state('group.edit', {
+            parent: 'group',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/user-group/user-group-dialog.html',
+                    templateUrl: 'app/entities/group/group-dialog.html',
                     controller: 'UserGroupDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
@@ -157,21 +157,21 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('user-group', null, { reload: 'user-group' });
+                    $state.go('group', null, { reload: 'group' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
-        .state('user-group.delete', {
-            parent: 'user-group',
+        .state('group.delete', {
+            parent: 'group',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/user-group/user-group-delete-dialog.html',
+                    templateUrl: 'app/entities/group/group-delete-dialog.html',
                     controller: 'UserGroupDeleteController',
                     controllerAs: 'vm',
                     size: 'md',
@@ -181,7 +181,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('user-group', null, { reload: 'user-group' });
+                    $state.go('group', null, { reload: 'group' });
                 }, function() {
                     $state.go('^');
                 });

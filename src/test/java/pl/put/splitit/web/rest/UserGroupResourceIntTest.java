@@ -111,7 +111,7 @@ public class UserGroupResourceIntTest {
 
         // Create the UserGroup
 
-        restUserGroupMockMvc.perform(post("/api/user-groups")
+        restUserGroupMockMvc.perform(post("/api/groups")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(userGroup)))
                 .andExpect(status().isCreated());
@@ -134,7 +134,7 @@ public class UserGroupResourceIntTest {
 
         // Create the UserGroup, which fails.
 
-        restUserGroupMockMvc.perform(post("/api/user-groups")
+        restUserGroupMockMvc.perform(post("/api/groups")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(userGroup)))
                 .andExpect(status().isBadRequest());
@@ -152,7 +152,7 @@ public class UserGroupResourceIntTest {
 
         // Create the UserGroup, which fails.
 
-        restUserGroupMockMvc.perform(post("/api/user-groups")
+        restUserGroupMockMvc.perform(post("/api/groups")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(userGroup)))
                 .andExpect(status().isBadRequest());
@@ -170,7 +170,7 @@ public class UserGroupResourceIntTest {
 
         // Create the UserGroup, which fails.
 
-        restUserGroupMockMvc.perform(post("/api/user-groups")
+        restUserGroupMockMvc.perform(post("/api/groups")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(userGroup)))
                 .andExpect(status().isBadRequest());
@@ -186,7 +186,7 @@ public class UserGroupResourceIntTest {
         userGroupRepository.saveAndFlush(userGroup);
 
         // Get all the userGroups
-        restUserGroupMockMvc.perform(get("/api/user-groups?sort=id,desc"))
+        restUserGroupMockMvc.perform(get("/api/groups?sort=id,desc"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(userGroup.getId().intValue())))
@@ -202,7 +202,7 @@ public class UserGroupResourceIntTest {
         userGroupRepository.saveAndFlush(userGroup);
 
         // Get the userGroup
-        restUserGroupMockMvc.perform(get("/api/user-groups/{id}", userGroup.getId()))
+        restUserGroupMockMvc.perform(get("/api/groups/{id}", userGroup.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(userGroup.getId().intValue()))
@@ -215,7 +215,7 @@ public class UserGroupResourceIntTest {
     @Transactional
     public void getNonExistingUserGroup() throws Exception {
         // Get the userGroup
-        restUserGroupMockMvc.perform(get("/api/user-groups/{id}", Long.MAX_VALUE))
+        restUserGroupMockMvc.perform(get("/api/groups/{id}", Long.MAX_VALUE))
                 .andExpect(status().isNotFound());
     }
 
@@ -234,7 +234,7 @@ public class UserGroupResourceIntTest {
                 .isPrivate(UPDATED_IS_PRIVATE)
                 .creationDate(UPDATED_CREATION_DATE);
 
-        restUserGroupMockMvc.perform(put("/api/user-groups")
+        restUserGroupMockMvc.perform(put("/api/groups")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(updatedUserGroup)))
                 .andExpect(status().isOk());
@@ -257,7 +257,7 @@ public class UserGroupResourceIntTest {
         int databaseSizeBeforeDelete = userGroupRepository.findAll().size();
 
         // Get the userGroup
-        restUserGroupMockMvc.perform(delete("/api/user-groups/{id}", userGroup.getId())
+        restUserGroupMockMvc.perform(delete("/api/groups/{id}", userGroup.getId())
                 .accept(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
