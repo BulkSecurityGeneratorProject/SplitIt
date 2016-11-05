@@ -21,8 +21,7 @@
             "date": "Date",
             "value": "Value",
             "debitor": "Debitor",
-            "creditor": "Creditor",
-            "userGroup": "User Group"
+            "creditor": "Creditor"
         }
     }
 }

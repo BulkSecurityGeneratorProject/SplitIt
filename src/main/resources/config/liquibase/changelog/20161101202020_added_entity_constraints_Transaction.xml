@@ -20,11 +20,5 @@
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
 
-        <addForeignKeyConstraint baseColumnNames="user_group_id"
-                                 baseTableName="transaction"
-                                 constraintName="fk_transaction_user_group_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="user_group"/>
-
     </changeSet>
 </databaseChangeLog>

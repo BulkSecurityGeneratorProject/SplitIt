@@ -17,15 +17,6 @@
             "relationshipType": "many-to-one",
             "otherEntityField": "login",
             "ownerSide": true
-        },
-        {
-            "relationshipName": "userGroup",
-            "otherEntityName": "userGroup",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "name"
         }
     ],
     "fields": [

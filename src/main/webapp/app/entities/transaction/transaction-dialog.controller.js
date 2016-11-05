@@ -5,9 +5,9 @@
         .module('splitItApp')
         .controller('TransactionDialogController', TransactionDialogController);
 
-    TransactionDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Transaction', 'User', 'UserGroup'];
+    TransactionDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Transaction', 'User'];
 
-    function TransactionDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Transaction, User, UserGroup) {
+    function TransactionDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Transaction, User) {
         var vm = this;
 
         vm.transaction = entity;
@@ -16,7 +16,6 @@
         vm.openCalendar = openCalendar;
         vm.save = save;
         vm.users = User.query();
-        vm.usergroups = UserGroup.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

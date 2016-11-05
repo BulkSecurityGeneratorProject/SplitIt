@@ -1,17 +1,16 @@
 package pl.put.splitit.service;
 
+import pl.put.splitit.domain.Transaction;
+import pl.put.splitit.repository.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.put.splitit.domain.Transaction;
-import pl.put.splitit.domain.UserGroup;
-import pl.put.splitit.repository.TransactionRepository;
-import pl.put.splitit.web.rest.TransactionType;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Service Implementation for managing Transaction.
@@ -21,7 +20,7 @@ import javax.inject.Inject;
 public class TransactionService {
 
     private final Logger log = LoggerFactory.getLogger(TransactionService.class);
-
+    
     @Inject
     private TransactionRepository transactionRepository;
 
@@ -38,46 +37,25 @@ public class TransactionService {
     }
 
     /**
-     * Get all the transactions.
-     *
-     * @param pageable the pagination information
-     * @return the list of entities
+     *  Get all the transactions.
+     *  
+     *  @param pageable the pagination information
+     *  @return the list of entities
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) 
     public Page<Transaction> findAll(Pageable pageable) {
         log.debug("Request to get all Transactions");
         Page<Transaction> result = transactionRepository.findAll(pageable);
         return result;
     }
 
-    @Transactional(readOnly = true)
-    public Page<Transaction> findAllByUserAndType(String login, TransactionType type, Pageable pageable) {
-        log.debug("Request to get all Transactions of user: " + login + " and type: " + type);
-
-        switch (type) {
-            case DEBIT:
-                return transactionRepository.findByDebtorAndUser(login, pageable);
-            case CREDIT:
-                return transactionRepository.findByCreditorAndUser(login, pageable);
-            default:
-                return transactionRepository.findAllByUser(login, pageable);
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public Page<Transaction> findAllByGroup(Long id, Pageable pageable) {
-        log.debug("Request to get all Transactions of group: " + id);
-        return transactionRepository.findAllByGroup(id, pageable);
-    }
-
-
     /**
-     * Get one transaction by id.
+     *  Get one transaction by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     *  @param id the id of the entity
+     *  @return the entity
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) 
     public Transaction findOne(Long id) {
         log.debug("Request to get Transaction : {}", id);
         Transaction transaction = transactionRepository.findOne(id);
@@ -85,15 +63,12 @@ public class TransactionService {
     }
 
     /**
-     * Delete the  transaction by id.
+     *  Delete the  transaction by id.
      *
-     * @param id the id of the entity
+     *  @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Transaction : {}", id);
         transactionRepository.delete(id);
     }
-
-
-
 }

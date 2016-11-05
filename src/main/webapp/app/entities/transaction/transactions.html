@@ -25,7 +25,6 @@
                     <th jh-sort-by="value"><span data-translate="splitItApp.transaction.value">Value</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="debitor.login"><span data-translate="splitItApp.transaction.debitor">Debitor</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="creditor.login"><span data-translate="splitItApp.transaction.creditor">Creditor</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="userGroup.name"><span data-translate="splitItApp.transaction.userGroup">User Group</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -41,9 +40,6 @@
                     </td>
                     <td>
                         {{transaction.creditor.login}}
-                    </td>
-                    <td>
-                        <a ui-sref="group-detail({id:transaction.userGroup.id})">{{transaction.userGroup.name}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
