@@ -5,9 +5,9 @@
         .module('splitItApp')
         .controller('TransactionDetailController', TransactionDetailController);
 
-    TransactionDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Transaction', 'User'];
+    TransactionDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Transaction', 'User', 'UserGroup'];
 
-    function TransactionDetailController($scope, $rootScope, $stateParams, previousState, entity, Transaction, User) {
+    function TransactionDetailController($scope, $rootScope, $stateParams, previousState, entity, Transaction, User, UserGroup) {
         var vm = this;
 
         vm.transaction = entity;

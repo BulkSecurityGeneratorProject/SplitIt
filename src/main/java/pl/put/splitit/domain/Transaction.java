@@ -45,6 +45,10 @@ public class Transaction implements Serializable {
     @ManyToOne
     private User creditor;
 
+    @ManyToOne
+    @NotNull
+    private UserGroup userGroup;
+
     public Long getId() {
         return id;
     }
@@ -129,6 +133,19 @@ public class Transaction implements Serializable {
 
     public void setCreditor(User user) {
         this.creditor = user;
+    }
+
+    public UserGroup getUserGroup() {
+        return userGroup;
+    }
+
+    public Transaction userGroup(UserGroup userGroup) {
+        this.userGroup = userGroup;
+        return this;
+    }
+
+    public void setUserGroup(UserGroup userGroup) {
+        this.userGroup = userGroup;
     }
 
     @Override

@@ -4,6 +4,7 @@ import pl.put.splitit.SplitItApp;
 
 import pl.put.splitit.domain.Transaction;
 import pl.put.splitit.domain.User;
+import pl.put.splitit.domain.UserGroup;
 import pl.put.splitit.repository.TransactionRepository;
 import pl.put.splitit.service.TransactionService;
 
@@ -100,6 +101,11 @@ public class TransactionResourceIntTest {
         em.persist(debitor);
         em.flush();
         transaction.setDebitor(debitor);
+        // Add required entity
+        UserGroup userGroup = UserGroupResourceIntTest.createEntity(em);
+        em.persist(userGroup);
+        em.flush();
+        transaction.setUserGroup(userGroup);
         return transaction;
     }
 
