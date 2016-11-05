@@ -8,36 +8,25 @@ import java.util.List;
 
 /**
  * Created by Krystek on 2016-11-04.
- *
- * Podsumowanie transakcji z danym użytkownikem w ramch grupy
+ * <p>
+ * Podsumowanie transakcji z danym użytkownikem
  */
-public class UserSummary implements TransactionSummary {
-
+public class UserSummary extends Summary {
     @Getter
-    private Double totalAsDebitor, totalAsCreditor;
-
-    @Getter
-    private User user, secondUser;
+    private User secondUser;
 
     @Getter
     List<Transaction> transactions;
 
-    public UserSummary(User user, User secondUser, List<Transaction> transactions) {
+    UserSummary(User user, User secondUser, List<Transaction> transactions) {
         this.user = user;
         this.secondUser = secondUser;
         this.transactions = transactions;
-        calculate();
-    }
-
-
-    @Override
-    public Double getTotal() {
-        return totalAsCreditor - totalAsDebitor;
     }
 
     @Override
     public void calculate() {
         totalAsCreditor = transactions.parallelStream().filter(t -> t.getCreditor().equals(user)).mapToDouble(p -> p.getValue()).sum();
-        totalAsDebitor = transactions.parallelStream().filter(t -> t.getCreditor().equals(user)).mapToDouble(p -> p.getValue()).sum();
+        totalAsDebitor = transactions.parallelStream().filter(t -> t.getDebitor().equals(user)).mapToDouble(p -> p.getValue()).sum();
     }
 }

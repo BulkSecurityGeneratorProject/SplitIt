@@ -1,5 +1,6 @@
 package pl.put.splitit.web.rest;
 
+import org.springframework.transaction.annotation.Transactional;
 import pl.put.splitit.SplitItApp;
 import pl.put.splitit.domain.User;
 import pl.put.splitit.repository.UserRepository;
@@ -46,8 +47,13 @@ public class UserResourceIntTest {
      * if they test an entity which has a required relationship to the User entity.
      */
     public static User createEntity(EntityManager em) {
+        return createEntity(em, "login");
+    }
+
+    @Transactional
+    public static User createEntity(EntityManager em, String login) {
         User user = new User();
-        user.setLogin("test");
+        user.setLogin(login);
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
         user.setEmail("test@test.com");
@@ -58,6 +64,7 @@ public class UserResourceIntTest {
         em.flush();
         return user;
     }
+
 
     @Before
     public void setup() {

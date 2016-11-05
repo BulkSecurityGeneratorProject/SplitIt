@@ -1,27 +1,24 @@
 package pl.put.splitit.web.rest;
 
-import pl.put.splitit.SplitItApp;
-
-import pl.put.splitit.domain.Transaction;
-import pl.put.splitit.domain.User;
-import pl.put.splitit.domain.UserGroup;
-import pl.put.splitit.repository.TransactionRepository;
-import pl.put.splitit.service.TransactionService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import pl.put.splitit.SplitItApp;
+import pl.put.splitit.domain.Transaction;
+import pl.put.splitit.domain.User;
+import pl.put.splitit.domain.UserGroup;
+import pl.put.splitit.repository.TransactionRepository;
+import pl.put.splitit.service.TransactionService;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -31,6 +28,7 @@ import java.time.ZoneId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -86,28 +84,56 @@ public class TransactionResourceIntTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
     public static Transaction createEntity(EntityManager em) {
+        return createEntity(em, "AAAAA", "BBBBB", 0.0, "AAAAA");
+    }
+
+
+    public static Transaction createEntity(EntityManager em, String creditorLogin, String debitorLogin, Double value, String group) {
         Transaction transaction = new Transaction()
-                .name(DEFAULT_NAME)
-                .description(DEFAULT_DESCRIPTION)
-                .date(DEFAULT_DATE)
-                .value(DEFAULT_VALUE);
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .date(DEFAULT_DATE)
+            .value(value);
         // Add required entity
-        User debitor = UserResourceIntTest.createEntity(em);
+        User debitor = UserResourceIntTest.createEntity(em, debitorLogin);
         em.persist(debitor);
         em.flush();
         transaction.setDebitor(debitor);
+
+        User creditor = UserResourceIntTest.createEntity(em, creditorLogin);
+        em.persist(creditor);
+        em.flush();
+        transaction.setCreditor(creditor);
+
         // Add required entity
-        UserGroup userGroup = UserGroupResourceIntTest.createEntity(em);
+        UserGroup userGroup = UserGroupResourceIntTest.createEntity(em, group);
         em.persist(userGroup);
         em.flush();
         transaction.setUserGroup(userGroup);
         return transaction;
     }
+
+
+    public static Transaction createEntity(EntityManager em, User debitor, User creditor, Double value, UserGroup userGroup) {
+        Transaction transaction = new Transaction()
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .date(DEFAULT_DATE)
+            .value(value);
+        transaction.setDebitor(debitor);
+        transaction.setCreditor(creditor);
+        transaction.setUserGroup(userGroup);
+        em.persist(transaction);
+        em.flush();
+        return transaction;
+    }
+
+
 
     @Before
     public void initTest() {
@@ -122,9 +148,9 @@ public class TransactionResourceIntTest {
         // Create the Transaction
 
         restTransactionMockMvc.perform(post("/api/transactions")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(transaction)))
-                .andExpect(status().isCreated());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(transaction)))
+            .andExpect(status().isCreated());
 
         // Validate the Transaction in the database
         List<Transaction> transactions = transactionRepository.findAll();
@@ -146,9 +172,9 @@ public class TransactionResourceIntTest {
         // Create the Transaction, which fails.
 
         restTransactionMockMvc.perform(post("/api/transactions")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(transaction)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(transaction)))
+            .andExpect(status().isBadRequest());
 
         List<Transaction> transactions = transactionRepository.findAll();
         assertThat(transactions).hasSize(databaseSizeBeforeTest);
@@ -164,9 +190,9 @@ public class TransactionResourceIntTest {
         // Create the Transaction, which fails.
 
         restTransactionMockMvc.perform(post("/api/transactions")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(transaction)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(transaction)))
+            .andExpect(status().isBadRequest());
 
         List<Transaction> transactions = transactionRepository.findAll();
         assertThat(transactions).hasSize(databaseSizeBeforeTest);
@@ -182,9 +208,9 @@ public class TransactionResourceIntTest {
         // Create the Transaction, which fails.
 
         restTransactionMockMvc.perform(post("/api/transactions")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(transaction)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(transaction)))
+            .andExpect(status().isBadRequest());
 
         List<Transaction> transactions = transactionRepository.findAll();
         assertThat(transactions).hasSize(databaseSizeBeforeTest);
@@ -198,13 +224,13 @@ public class TransactionResourceIntTest {
 
         // Get all the transactions
         restTransactionMockMvc.perform(get("/api/transactions?sort=id,desc"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(transaction.getId().intValue())))
-                .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-                .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-                .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-                .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(transaction.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+            .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())));
     }
 
     @Test
@@ -229,7 +255,7 @@ public class TransactionResourceIntTest {
     public void getNonExistingTransaction() throws Exception {
         // Get the transaction
         restTransactionMockMvc.perform(get("/api/transactions/{id}", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -243,15 +269,15 @@ public class TransactionResourceIntTest {
         // Update the transaction
         Transaction updatedTransaction = transactionRepository.findOne(transaction.getId());
         updatedTransaction
-                .name(UPDATED_NAME)
-                .description(UPDATED_DESCRIPTION)
-                .date(UPDATED_DATE)
-                .value(UPDATED_VALUE);
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .date(UPDATED_DATE)
+            .value(UPDATED_VALUE);
 
         restTransactionMockMvc.perform(put("/api/transactions")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedTransaction)))
-                .andExpect(status().isOk());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedTransaction)))
+            .andExpect(status().isOk());
 
         // Validate the Transaction in the database
         List<Transaction> transactions = transactionRepository.findAll();
@@ -273,8 +299,8 @@ public class TransactionResourceIntTest {
 
         // Get the transaction
         restTransactionMockMvc.perform(delete("/api/transactions/{id}", transaction.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
 
         // Validate the database is empty
         List<Transaction> transactions = transactionRepository.findAll();

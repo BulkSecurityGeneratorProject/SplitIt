@@ -1,26 +1,23 @@
 package pl.put.splitit.web.rest;
 
-import pl.put.splitit.SplitItApp;
-
-import pl.put.splitit.domain.UserGroup;
-import pl.put.splitit.domain.User;
-import pl.put.splitit.repository.UserGroupRepository;
-import pl.put.splitit.service.UserGroupService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import pl.put.splitit.SplitItApp;
+import pl.put.splitit.domain.User;
+import pl.put.splitit.domain.UserGroup;
+import pl.put.splitit.repository.UserGroupRepository;
+import pl.put.splitit.service.UserGroupService;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -30,6 +27,7 @@ import java.time.ZoneId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -82,15 +80,19 @@ public class UserGroupResourceIntTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
     public static UserGroup createEntity(EntityManager em) {
+        return createEntity(em, DEFAULT_NAME);
+    }
+
+    public static UserGroup createEntity(EntityManager em, String name) {
         UserGroup userGroup = new UserGroup()
-                .name(DEFAULT_NAME)
-                .isPrivate(DEFAULT_IS_PRIVATE)
-                .creationDate(DEFAULT_CREATION_DATE);
+            .name(name)
+            .isPrivate(DEFAULT_IS_PRIVATE)
+            .creationDate(DEFAULT_CREATION_DATE);
         // Add required entity
         User owner = UserResourceIntTest.createEntity(em);
         em.persist(owner);
@@ -98,6 +100,7 @@ public class UserGroupResourceIntTest {
         userGroup.setOwner(owner);
         return userGroup;
     }
+
 
     @Before
     public void initTest() {
@@ -112,9 +115,9 @@ public class UserGroupResourceIntTest {
         // Create the UserGroup
 
         restUserGroupMockMvc.perform(post("/api/groups")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(userGroup)))
-                .andExpect(status().isCreated());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(userGroup)))
+            .andExpect(status().isCreated());
 
         // Validate the UserGroup in the database
         List<UserGroup> userGroups = userGroupRepository.findAll();
@@ -135,9 +138,9 @@ public class UserGroupResourceIntTest {
         // Create the UserGroup, which fails.
 
         restUserGroupMockMvc.perform(post("/api/groups")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(userGroup)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(userGroup)))
+            .andExpect(status().isBadRequest());
 
         List<UserGroup> userGroups = userGroupRepository.findAll();
         assertThat(userGroups).hasSize(databaseSizeBeforeTest);
@@ -153,9 +156,9 @@ public class UserGroupResourceIntTest {
         // Create the UserGroup, which fails.
 
         restUserGroupMockMvc.perform(post("/api/groups")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(userGroup)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(userGroup)))
+            .andExpect(status().isBadRequest());
 
         List<UserGroup> userGroups = userGroupRepository.findAll();
         assertThat(userGroups).hasSize(databaseSizeBeforeTest);
@@ -171,9 +174,9 @@ public class UserGroupResourceIntTest {
         // Create the UserGroup, which fails.
 
         restUserGroupMockMvc.perform(post("/api/groups")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(userGroup)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(userGroup)))
+            .andExpect(status().isBadRequest());
 
         List<UserGroup> userGroups = userGroupRepository.findAll();
         assertThat(userGroups).hasSize(databaseSizeBeforeTest);
@@ -187,12 +190,12 @@ public class UserGroupResourceIntTest {
 
         // Get all the userGroups
         restUserGroupMockMvc.perform(get("/api/groups?sort=id,desc"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(userGroup.getId().intValue())))
-                .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-                .andExpect(jsonPath("$.[*].isPrivate").value(hasItem(DEFAULT_IS_PRIVATE.booleanValue())))
-                .andExpect(jsonPath("$.[*].creationDate").value(hasItem(DEFAULT_CREATION_DATE.toString())));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(userGroup.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].isPrivate").value(hasItem(DEFAULT_IS_PRIVATE.booleanValue())))
+            .andExpect(jsonPath("$.[*].creationDate").value(hasItem(DEFAULT_CREATION_DATE.toString())));
     }
 
     @Test
@@ -216,7 +219,7 @@ public class UserGroupResourceIntTest {
     public void getNonExistingUserGroup() throws Exception {
         // Get the userGroup
         restUserGroupMockMvc.perform(get("/api/groups/{id}", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -230,14 +233,14 @@ public class UserGroupResourceIntTest {
         // Update the userGroup
         UserGroup updatedUserGroup = userGroupRepository.findOne(userGroup.getId());
         updatedUserGroup
-                .name(UPDATED_NAME)
-                .isPrivate(UPDATED_IS_PRIVATE)
-                .creationDate(UPDATED_CREATION_DATE);
+            .name(UPDATED_NAME)
+            .isPrivate(UPDATED_IS_PRIVATE)
+            .creationDate(UPDATED_CREATION_DATE);
 
         restUserGroupMockMvc.perform(put("/api/groups")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedUserGroup)))
-                .andExpect(status().isOk());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedUserGroup)))
+            .andExpect(status().isOk());
 
         // Validate the UserGroup in the database
         List<UserGroup> userGroups = userGroupRepository.findAll();
@@ -258,8 +261,8 @@ public class UserGroupResourceIntTest {
 
         // Get the userGroup
         restUserGroupMockMvc.perform(delete("/api/groups/{id}", userGroup.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
 
         // Validate the database is empty
         List<UserGroup> userGroups = userGroupRepository.findAll();
