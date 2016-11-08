@@ -4,6 +4,7 @@ import pl.put.splitit.domain.Transaction;
 import pl.put.splitit.domain.User;
 import pl.put.splitit.domain.UserGroup;
 
+import java.security.acl.Group;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class SummaryBuilder {
     //<editor-fold desc="buildUserSummary">
 
     /**
-     * Build summary for pair of users within given group
+     * Builds summary for pair of users within given group
      *
      * @param group
      * @param user
@@ -40,6 +41,13 @@ public class SummaryBuilder {
         return buildUserSummary(user, secondUser, transactions);
     }
 
+    /**
+     * Builds summary for pair of users omitting groups
+     *
+     * @param user
+     * @param secondUser
+     * @return
+     */
     public UserSummary buildUserSummary(User user, User secondUser) {
         return buildUserSummary(user, secondUser, transactions);
     }
@@ -56,9 +64,21 @@ public class SummaryBuilder {
     //</editor-fold>
 
 
-    public GroupSummary buildGroupSummary(User user, UserGroup group, List<Transaction> transactions) {
+    /**
+     * Builds summary for given group and user
+     *
+     * @param user
+     * @param group
+     * @return
+     */
+    public GroupSummary buildGroupSummary(User user, UserGroup group) {
+        return buildGroupSummary(user, group, transactions);
+    }
+
+    private GroupSummary buildGroupSummary(User user, UserGroup group, List<Transaction> transactions) {
         Map<User, List<Transaction>> map = new HashMap<>();
         for (Transaction t : transactions) {
+            // If user isn't present in transaction or given group doesn't match transaction group
             if ((!t.getDebitor().equals(user) && !t.getCreditor().equals(user)) || !t.getUserGroup().equals(group)) {
                 continue;
             }
@@ -80,6 +100,42 @@ public class SummaryBuilder {
         for (Map.Entry<User, List<Transaction>> entry : map.entrySet()) {
             userSummaries.add(buildUserSummary(user, entry.getKey(), entry.getValue()));
         }
-        return new GroupSummary(user, group, userSummaries);
+        GroupSummary summary = new GroupSummary(user, group, userSummaries);
+        summary.calculate();
+        return summary;
+    }
+
+    public OverallSummary buildOverallSummary(User user){
+        return buildOverallSummary(user, transactions);
+    }
+
+
+    private OverallSummary buildOverallSummary(User user, List<Transaction> transactions){
+        Map<UserGroup, List<Transaction>> map = new HashMap<>();
+        for (Transaction t : transactions) {
+            // If user isn't present in transaction
+            if ((!t.getDebitor().equals(user) && !t.getCreditor().equals(user))) {
+                continue;
+            }
+
+            UserGroup group = t.getUserGroup();
+
+            if (map.containsKey(group)) {
+                map.get(group).add(t);
+            } else {
+                map.put(group, new ArrayList<Transaction>() {{
+                    add(t);
+                }});
+            }
+        }
+
+        List<GroupSummary> groupSummaries = new ArrayList();
+        for (Map.Entry<UserGroup, List<Transaction>> entry : map.entrySet()) {
+            groupSummaries.add(buildGroupSummary(user, entry.getKey(), entry.getValue()));
+        }
+
+        OverallSummary summary = new OverallSummary(user, groupSummaries);
+        summary.calculate();
+        return summary;
     }
 }

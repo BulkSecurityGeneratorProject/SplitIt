@@ -14,6 +14,9 @@ import pl.put.splitit.config.Constants;
 import pl.put.splitit.domain.Transaction;
 import pl.put.splitit.domain.User;
 import pl.put.splitit.domain.UserGroup;
+import pl.put.splitit.domain.summary.GroupSummary;
+import pl.put.splitit.domain.summary.OverallSummary;
+import pl.put.splitit.domain.summary.UserSummary;
 import pl.put.splitit.repository.UserRepository;
 import pl.put.splitit.security.AuthoritiesConstants;
 import pl.put.splitit.service.MailService;
@@ -184,6 +187,60 @@ public class UserResource {
             .map(ManagedUserVM::new)
             .map(managedUserVM -> new ResponseEntity<>(managedUserVM, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+
+    @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/summary")
+    @Timed
+    public ResponseEntity<OverallSummary> getSummary(@PathVariable String login) {
+        log.debug("REST request to get summary for user : {}", login);
+        Optional<User> user = userService.getUserWithAuthoritiesByLogin(login);
+        if (!user.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(transactionService.getSummary(user.get()), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/summary/{login2:" + Constants.LOGIN_REGEX + "}")
+    @Timed
+    public ResponseEntity<UserSummary> getUserSummary(@PathVariable String login, @PathVariable String login2) {
+        log.debug("REST request to get summary for users : {} and {}", login, login2);
+        Optional<User> user = userService.getUserWithAuthoritiesByLogin(login);
+        Optional<User> user2 = userService.getUserWithAuthoritiesByLogin(login2);
+        if (!user.isPresent() || !user2.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(transactionService.getSummary(user.get(), user2.get()), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/groups/{group}/summary")
+    @Timed
+    public ResponseEntity<GroupSummary> getSummaryInGroup(@PathVariable String login, @PathVariable Long group) {
+        log.debug("REST request to get summary for user {} in group {}", login, group);
+        Optional<User> user = userService.getUserWithAuthoritiesByLogin(login);
+        UserGroup userGroup = userGroupService.findOne(group);
+        if (!user.isPresent() || userGroup == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(transactionService.getSummary(user.get(), userGroup), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/groups/{group}/summary/{login2:" + Constants.LOGIN_REGEX + "}")
+    @Timed
+    public ResponseEntity<UserSummary> getUserSummaryInGroup(@PathVariable String login, @PathVariable String login2, @PathVariable Long group) {
+        log.debug("REST request to get summary for users : {} and {}", login, login2);
+        Optional<User> user = userService.getUserWithAuthoritiesByLogin(login);
+        Optional<User> user2 = userService.getUserWithAuthoritiesByLogin(login2);
+        UserGroup userGroup = userGroupService.findOne(group);
+        if (!user.isPresent() || !user2.isPresent() || userGroup == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(transactionService.getSummary(user.get(), user2.get(), userGroup), HttpStatus.OK);
     }
 
 

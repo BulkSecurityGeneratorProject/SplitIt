@@ -46,7 +46,7 @@ public class SummaryBuilderTest {
         t1 = TransactionResourceIntTest.createEntity(em, user, admin, -6D, first); // Admin buys sth for user for 6$
         t2 = TransactionResourceIntTest.createEntity(em, admin, user, 5D, first); // Admin returns 5$ to user
         t3 = TransactionResourceIntTest.createEntity(em, user, admin, 2D, first); // User returns 2$ to admin
-        t4 = TransactionResourceIntTest.createEntity(em, admin, test, 5D, first); // Admin returns 5$ to user
+        t4 = TransactionResourceIntTest.createEntity(em, admin, test, 5D, first); // Admin returns 5$ to test
 
         t5 = TransactionResourceIntTest.createEntity(em, admin, user, -10D, second); // User buys sth for admin for 10$
         t6 = TransactionResourceIntTest.createEntity(em, user, admin, -6D, second); // Admin buys sth for user for 6$
@@ -158,6 +158,118 @@ public class SummaryBuilderTest {
 
     //</editor-fold>
 
+    @Test
+    public void groupSummary_SingleTransactionInOneGroup(){
+        SummaryBuilder builder = new SummaryBuilder(t0);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(-10.0, summary.getTotal(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_NumberOfSummariesShouldBeOne(){
+        SummaryBuilder builder = new SummaryBuilder(t0);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(1, summary.getSummaries().size());
+    }
+
+    @Test
+    public void groupSummary_SingleTransactionInOneGroup_TestDebtValue() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(10.0, summary.getTotalAsDebitor(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_SingleTransactionInOneGroup_TestCreditValue() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(0.0, summary.getTotalAsCreditor(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_SingleTransactionInOneGroup_TestDebtValue_FromUsersPointOfView() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0);
+        GroupSummary summary = builder.buildGroupSummary(user, first);
+        Assert.assertEquals(0.0, summary.getTotalAsDebitor(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_SingleTransactionInOneGroup_TestCreditValue_FromUsersPointOfView() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0);
+        GroupSummary summary = builder.buildGroupSummary(user, first);
+        Assert.assertEquals(10.0, summary.getTotalAsCreditor(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_DoubleTransactionInOneGroup() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t0);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(-20.0, summary.getTotal(), DELTA);
+    }
 
 
+    @Test
+    public void groupSummary_SingleDebtAndCreditInOneGroup() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t1);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(-4.0, summary.getTotal(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_SingleDebtAndCreditWithTwoUsersInOneGroup() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t1, t4);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(1.0, summary.getTotal(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_DoubleDebtAndDoubleReturnInOneGroup() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t1, t2, t3);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(-1.0, summary.getTotal(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_DoubleDebtAndDoubleReturnInOneGroup_FromUsersPointOfView() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t1, t2, t3);
+        GroupSummary summary = builder.buildGroupSummary(user, first);
+        Assert.assertEquals(1.0, summary.getTotal(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_DoubleDebtAndDoubleReturnInTwoGroups() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t1, t2, t3, t4, t5, t6, t7, t8);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(4.0, summary.getTotal(), DELTA);
+    }
+
+    @Test
+    public void groupSummary_DoubleDebtAndDoubleReturnInTwoGroups_FromUsersPointOfView() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t1, t2, t3, t4, t5, t6, t7, t8);
+        GroupSummary summary = builder.buildGroupSummary(user, first);
+        Assert.assertEquals(1.0, summary.getTotal(), DELTA);
+    }
+
+
+    @Test
+    public void groupSummary_DoubleDebtAndDoubleReturnInFirstOfTwoGroups() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t1, t2, t3, t4, t5, t6, t7, t8);
+        GroupSummary summary = builder.buildGroupSummary(admin, first);
+        Assert.assertEquals(4.0, summary.getTotal(), DELTA);
+    }
+
+
+    @Test
+    public void groupSummary_DoubleDebtAndDoubleReturnInSecondOfTwoGroups() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t1, t2, t3, t4, t5, t6, t7, t8);
+        GroupSummary summary = builder.buildGroupSummary(admin, second);
+        Assert.assertEquals(-1.0, summary.getTotal(), DELTA);
+    }
+
+    @Test
+    public void overallSummary_DoubleDebtAndDoubleReturnInOneOfTwoGroups() throws Exception {
+        SummaryBuilder builder = new SummaryBuilder(t0, t1, t2, t3, t4, t5, t6, t7, t8);
+        OverallSummary summary = builder.buildOverallSummary(admin);
+        Assert.assertEquals(3.0, summary.getTotal(), DELTA);
+    }
 }

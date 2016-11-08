@@ -1,6 +1,7 @@
 package pl.put.splitit.domain.summary;
 
 import lombok.Getter;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import pl.put.splitit.domain.Transaction;
 import pl.put.splitit.domain.User;
 
@@ -15,7 +16,6 @@ public class UserSummary extends Summary {
     @Getter
     private User secondUser;
 
-    @Getter
     List<Transaction> transactions;
 
     UserSummary(User user, User secondUser, List<Transaction> transactions) {

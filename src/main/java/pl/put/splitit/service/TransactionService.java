@@ -7,11 +7,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.put.splitit.domain.Transaction;
+import pl.put.splitit.domain.User;
 import pl.put.splitit.domain.UserGroup;
+import pl.put.splitit.domain.summary.GroupSummary;
+import pl.put.splitit.domain.summary.OverallSummary;
+import pl.put.splitit.domain.summary.SummaryBuilder;
+import pl.put.splitit.domain.summary.UserSummary;
 import pl.put.splitit.repository.TransactionRepository;
 import pl.put.splitit.web.rest.TransactionType;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Service Implementation for managing Transaction.
@@ -64,6 +70,7 @@ public class TransactionService {
         }
     }
 
+
     @Transactional(readOnly = true)
     public Page<Transaction> findAllByGroup(Long id, Pageable pageable) {
         log.debug("Request to get all Transactions of group: " + id);
@@ -95,5 +102,28 @@ public class TransactionService {
     }
 
 
+    public OverallSummary getSummary(User user) {
+        List<Transaction> transactions = transactionRepository.findAllByUser(user.getLogin());
+        SummaryBuilder builder = new SummaryBuilder(transactions);
+        return builder.buildOverallSummary(user);
+    }
+
+    public UserSummary getSummary(User user, User user2) {
+        List<Transaction> transactions = transactionRepository.findAllByUsers(user.getLogin(), user2.getLogin());
+        SummaryBuilder builder = new SummaryBuilder(transactions);
+        return builder.buildUserSummary(user, user2);
+    }
+
+    public UserSummary getSummary(User user, User user2, UserGroup group) {
+        List<Transaction> transactions = transactionRepository.findAllByUsersAndGroup(user.getLogin(), user2.getLogin(), group.getId());
+        SummaryBuilder builder = new SummaryBuilder(transactions);
+        return builder.buildUserSummary(group, user, user2);
+    }
+
+    public GroupSummary getSummary(User user, UserGroup group) {
+        List<Transaction> transactions = transactionRepository.findAllByUserAndGroup(user.getLogin(), group.getId());
+        SummaryBuilder builder = new SummaryBuilder(transactions);
+        return builder.buildGroupSummary(user, group);
+    }
 
 }
