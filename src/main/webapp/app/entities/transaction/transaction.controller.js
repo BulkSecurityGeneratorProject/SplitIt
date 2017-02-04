@@ -10,6 +10,7 @@
     function TransactionController ($scope, $state, Transaction, UserGroup, ParseLinks, AlertService, pagingParams, paginationConstants, Principal, Auth) {
         var vm = this;
 
+        vm.currentState = $state.current.name;
         vm.loadPage = loadPage;
         vm.predicate = pagingParams.predicate;
         vm.reverse = pagingParams.ascending;

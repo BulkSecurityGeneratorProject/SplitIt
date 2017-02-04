@@ -7,6 +7,9 @@
                 "createOrEditLabel": "Dodaj lub edytuj transakcję",
                 "search": "Szukaj transakcji"
             },
+            "myTransactions": {
+                "title": "Moje transakcje"
+            },
             "created": "Transakcja została stworzona.",
             "updated": "Transakcja została zaktualizowana.",
             "deleted": "Transakcja została usunięta.",

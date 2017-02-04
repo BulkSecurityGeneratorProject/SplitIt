@@ -4,7 +4,8 @@
             "total": "Bilans [zł]{{total}}",
             "totalAsCreditor": "Całkowita pożyczka [zł]{{totalAsCreditor}}",
             "totalAsDebitor": "Całkowity dług [zł]{{totalAsDebitor}}",
-
+            "groupsTitle" : "Moje transakcje - grupy",
+            "usersTitle" : "Moje transakcje - użytkownicy",
             "summary": "Podsumowanie",
             "group": {
                 "title" : "Podsumowanie dla grupy {{name}}",
