@@ -1,0 +1,43 @@
+<div>
+    <div class="modal-header">
+        <h3 class="modal-title" data-translate="splitItApp.summary.group.title" translate-values="{ name: vm.data.group.name }">Summary of group {{name}}</h3>
+        <h5 class="modal-title {{vm.data.total < 0 ? 'text-danger' : ''}} {{vm.data.total > 0 ? 'text-success' : ''}}" data-translate="splitItApp.summary.total" translate-values="{ total: ': ' + vm.data.total }">Total{{total}}</h5>
+        <h5 class="modal-title" data-translate="splitItApp.summary.totalAsCreditor" translate-values="{ totalAsCreditor: ': ' + vm.data.totalAsCreditor }">Total as creditor{{totalAsCreditor}}</h5>
+        <h5 class="modal-title" data-translate="splitItApp.summary.totalAsDebitor" translate-values="{ totalAsDebitor: ': ' + vm.data.totalAsDebitor }">Total as debitor{{totalAsDebitor}}</h5>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="name"><span data-translate="splitItApp.summary.group.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="total"><span data-translate="splitItApp.summary.total">Total</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="totalAsCreditor"><span data-translate="splitItApp.summary.totalAsCreditor">Total as creditor</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="totalAsDebitor"><span data-translate="splitItApp.summary.totalAsDebitor">Total as debitor</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="summary in vm.data.summaries track by summary.secondUser.id">
+                    <td>{{summary.secondUser.login}}</td>
+                    <td class="{{summary.total < 0 ? 'text-danger' : ''}} {{summary.total > 0 ? 'text-success' : ''}}">{{summary.total}}</td>
+                    <td>
+                        {{summary.totalAsCreditor}}
+                    </td>
+                    <td>
+                        {{summary.totalAsDebitor}}
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+    </div>
+</div>

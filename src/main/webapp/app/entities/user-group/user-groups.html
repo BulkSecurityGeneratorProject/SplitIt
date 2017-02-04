@@ -1,16 +1,10 @@
 <div>
     <h2 data-translate="splitItApp.userGroup.home.title">User Groups</h2>
-
-
-    <div class="alert alert-success" ng-show="vm.success" data-translate="settings.messages.success">
-        <strong>Settings saved!</strong>
-    </div>
-
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
-                <button class="btn btn-primary" ui-sref="group.new" >
+                <button class="btn btn-primary" ui-sref="user-group.new" >
                     <span class="glyphicon glyphicon-plus"></span>
                     <span  data-translate="splitItApp.userGroup.home.createLabel">
                         Create new User Group
@@ -24,6 +18,7 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="name"><span data-translate="splitItApp.userGroup.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="isPrivate"><span data-translate="splitItApp.userGroup.isPrivate">Is Private</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="creationDate"><span data-translate="splitItApp.userGroup.creationDate">Creation Date</span> <span class="glyphicon glyphicon-sort"></span></th>
@@ -32,9 +27,10 @@
                 </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="userGroup in vm.userGroups track by userGroup.id" >
+                <tr ng-repeat="userGroup in vm.userGroups track by userGroup.id">
+                    <td><a ui-sref="user-group-detail({id:userGroup.id})">{{userGroup.id}}</a></td>
                     <td>{{userGroup.name}}</td>
-                    <td>{{userGroup.isPrivate ? 'Tak' : 'Nie'}}</td>
+                    <td>{{userGroup.isPrivate}}</td>
                         <td>{{userGroup.creationDate | date:'mediumDate'}}</td>
                     <td>
                         {{userGroup.owner.login}}
@@ -42,31 +38,22 @@
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
-                                    ng-if="!userGroup.isPrivate && !vm.isUserInGroup(vm.loggedInAccount,userGroup)"
-                                    ng-click="vm.joinGroup(vm.loggedInAccount,userGroup)"
-                                    class="btn btn-success btn-sm">
-                                <span class="glyphicon glyphicon-plus"></span>
-                                <span class="hidden-xs hidden-sm" data-translate="entity.action.joinGroup"></span>
+                                    ui-sref="user-group-detail({id:userGroup.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
                             </button>
                             <button type="submit"
-                                    ng-if="vm.isAdmin(vm.loggedInAccount) || (vm.loggedInAccount.login == userGroup.owner.login)"
-                                    ui-sref="group.edit({id:userGroup.id})"
+                                    ui-sref="user-group.edit({id:userGroup.id})"
                                     class="btn btn-primary btn-sm">
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"></span>
                             </button>
                             <button type="submit"
-                                    ng-if="vm.isAdmin(vm.loggedInAccount) || (vm.loggedInAccount.login == userGroup.owner.login)"
-                                    ui-sref="group.delete({id:userGroup.id})"
+                                    ui-sref="user-group.delete({id:userGroup.id})"
                                     class="btn btn-danger btn-sm">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                                 <span class="hidden-xs hidden-sm" data-translate="entity.action.delete"></span>
-                            </button>
-                            <button type="submit"
-                                    ui-sref="group-detail({id:userGroup.id})"
-                                    class="btn btn-info btn-sm">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                                <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
                             </button>
                         </div>
                     </td>

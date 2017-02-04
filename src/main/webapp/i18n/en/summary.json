@@ -1,0 +1,20 @@
+{
+    "splitItApp": {
+        "summary": {
+            "total": "Bilans [zł]{{total}}",
+            "totalAsCreditor": "Całkowita pożyczka [zł]{{totalAsCreditor}}",
+            "totalAsDebitor": "Całkowity dług [zł]{{totalAsDebitor}}",
+
+            "summary": "Podsumowanie",
+            "group": {
+                "title" : "Podsumowanie dla grupy {{name}}",
+                "name": "Nazwa użytkownika"
+            },
+            "user": {
+                "title" : "Podsumowanie dla użytkownika {{name}}",
+                "name": "Nazwa grupy"
+            }
+        }
+    }
+}
+

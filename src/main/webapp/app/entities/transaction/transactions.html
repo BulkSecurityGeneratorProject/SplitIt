@@ -18,7 +18,6 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
-                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="name"><span data-translate="splitItApp.transaction.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="description"><span data-translate="splitItApp.transaction.description">Description</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="date"><span data-translate="splitItApp.transaction.date">Date</span> <span class="glyphicon glyphicon-sort"></span></th>
@@ -31,7 +30,6 @@
             </thead>
             <tbody>
                 <tr ng-repeat="transaction in vm.transactions track by transaction.id">
-                    <td><a ui-sref="transaction-detail({id:transaction.id})">{{transaction.id}}</a></td>
                     <td>{{transaction.name}}</td>
                     <td>{{transaction.description}}</td>
                         <td>{{transaction.date | date:'mediumDate'}}</td>
@@ -43,7 +41,7 @@
                         {{transaction.creditor.login}}
                     </td>
                     <td>
-                        <a ui-sref="group-detail({id:transaction.userGroup.id})">{{transaction.userGroup.name}}</a>
+                        {{transaction.userGroup.name}}
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

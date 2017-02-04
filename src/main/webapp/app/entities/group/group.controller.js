@@ -5,21 +5,56 @@
         .module('splitItApp')
         .controller('UserGroupController', UserGroupController);
 
-    UserGroupController.$inject = ['$scope', '$state', 'UserGroup', 'ParseLinks', 'AlertService', 'pagingParams', 'paginationConstants'];
+    UserGroupController.$inject = ['$filter','$scope', '$state', 'UserGroup', 'ParseLinks', 'AlertService', 'pagingParams', 'paginationConstants', 'Principal', 'Auth'];
 
-    function UserGroupController ($scope, $state, UserGroup, ParseLinks, AlertService, pagingParams, paginationConstants) {
+    function UserGroupController ($filter,$scope, $state, UserGroup, ParseLinks, AlertService, pagingParams, paginationConstants, Principal, Auth) {
         var vm = this;
-        
+
         vm.loadPage = loadPage;
         vm.predicate = pagingParams.predicate;
         vm.reverse = pagingParams.ascending;
         vm.transition = transition;
         vm.itemsPerPage = paginationConstants.itemsPerPage;
+        vm.loggedInAccount = null;
+
+        var copyAccount = function (account) {
+            return {
+                activated: account.activated,
+                email: account.email,
+                firstName: account.firstName,
+                langKey: account.langKey,
+                lastName: account.lastName,
+                login: account.login,
+                id: account.id,
+                authorities: account.authorities
+            };
+        };
+
+         var promise = new Promise(
+         function(resolve, reject) {
+            Principal.identity().then(function(account) {
+                vm.loggedInAccount = copyAccount(account);
+            });
+             resolve();
+          }
+          );
+
+        promise.then(function(){
+          vm.myGroups = UserGroup.myGroups.query({ login: vm.loggedInAccount.login});
+        });
+
+
+        vm.$state = $state;
 
         loadAll();
 
+         vm.isUserInGroup = function(account,userGroup){
+
+             return $filter('filter')(userGroup.users, {id: account.id })[0];
+         }
+
         function loadAll () {
-            UserGroup.query({
+            UserGroup.groups.query({
                 page: pagingParams.page - 1,
                 size: vm.itemsPerPage,
                 sort: sort()
@@ -54,6 +89,29 @@
                 sort: vm.predicate + ',' + (vm.reverse ? 'asc' : 'desc'),
                 search: vm.currentSearch
             });
+        }
+
+
+        vm.isAdmin =  function(account){
+            var index = account.authorities.indexOf('ROLE_ADMIN');
+            if(index == -1)
+                return false;
+            else
+                return true;
+        }
+
+        vm.joinGroup = function(account,userGroup){
+            vm.isSaving = true;
+            userGroup.users.push(account);
+            UserGroup.groups.update(userGroup, onSaveSuccess, onSaveError);
+        }
+
+        function onSaveSuccess (result) {
+            vm.isSaving = false;
+        }
+
+        function onSaveError () {
+            vm.isSaving = false;
         }
     }
 })();

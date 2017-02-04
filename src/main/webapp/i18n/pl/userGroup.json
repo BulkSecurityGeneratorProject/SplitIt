@@ -2,25 +2,25 @@
     "splitItApp": {
         "userGroup" : {
             "home": {
-                "title": "User Groups",
-                "createLabel": "Dodaj User Group",
-                "createOrEditLabel": "Dodaj lub edytuj: User Group",
-                "search": "Search for User Group"
+                "title": "Grupy",
+                "createLabel": "Dodaj grupę",
+                "createOrEditLabel": "Dodaj lub edytuj grupę",
+                "search": "Szukaj"
             },
-            "created": "A new User Group is created with identifier {{ param }}",
-            "updated": "A User Group is updated with identifier {{ param }}",
-            "deleted": "A User Group is deleted with identifier {{ param }}",
+            "created": "Grupa została utworzona.",
+            "updated": "Grupa została zaktualizowana.",
+            "deleted": "Grupa została usunięta.",
             "delete": {
-                "question": "Czy na pewno chcesz usunąć User Group {{ id }}?"
+                "question": "Czy na pewno chcesz usunąć grupę?"
             },
             "detail": {
-                "title": "User Group"
+                "title": "Podgląd grupy"
             },
-            "name": "Name",
-            "isPrivate": "Is Private",
-            "creationDate": "Creation Date",
-            "owner": "Owner",
-            "users": "Users"
+            "name": "Nazwa",
+            "isPrivate": "Prywatna",
+            "creationDate": "Data utworzenia",
+            "owner": "Właściciel",
+            "users": "Użytkownicy"
         }
     }
 }

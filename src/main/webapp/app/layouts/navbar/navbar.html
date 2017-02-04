@@ -14,37 +14,47 @@
         </div>
         <div class="navbar-collapse" uib-collapse="vm.isNavbarCollapsed" ng-switch="vm.isAuthenticated()">
             <ul class="nav navbar-nav navbar-right">
-                <li ui-sref-active="active">
+                <li ng-if="!vm.isAuthenticated()" ui-sref-active="active">
                     <a ui-sref="home" ng-click="vm.collapseNavbar()">
-                        <span class="glyphicon glyphicon-home"></span>
-                        <span class="hidden-sm" data-translate="global.menu.home">Home</span>
+                        <span class="glyphicon glyphicon-lock"></span>
+                        <span class="hidden-sm" data-translate="global.menu.login">Home</span>
                     </a>
                 </li>
-                <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
-                <li ng-class="{active: vm.$state.includes('entity')}" ng-switch-when="true" uib-dropdown class="dropdown pointer">
+                <li ng-if="vm.isAuthenticated()" ui-sref-active="group" ng-switch-when="true"  ng-class="{active: vm.$state.includes('group')}">
+                    <a ui-sref="group" ng-click="vm.collapseNavbar()">
+                        <span class="glyphicon glyphicon-certificate"></span>
+                        <span class="hidden-sm" data-translate="global.menu.groups">Home</span>
+                    </a>
+                </li>
+                <li ng-class="{active: vm.$state.includes('myTransactions') || vm.$state.includes('transactionsByGroup') || vm.$state.includes('transactionsByUser')}" ng-switch-when="true" uib-dropdown class="dropdown pointer">
                     <a class="dropdown-toggle" uib-dropdown-toggle href="" id="entity-menu">
                         <span>
-                            <span class="glyphicon glyphicon-th-list"></span>
-                            <span class="hidden-sm" data-translate="global.menu.entities.main">
-                                Entities
+                            <span class="glyphicon glyphicon-euro"></span>
+                            <span class="hidden-sm" data-translate="global.menu.transactions">
+                                Transactions
                             </span>
                             <b class="caret"></b>
                         </span>
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu>
                         <li ui-sref-active="active">
-                            <a ui-sref="group" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span data-translate="global.menu.entities.userGroup">User Group</span>
+                            <a ui-sref="myTransactions" ng-click="vm.collapseNavbar()">
+                                <span class="glyphicon glyphicon-euro"></span>&nbsp;
+                                <span data-translate="global.menu.myTransactions">My transactions</span>
                             </a>
                         </li>
                         <li ui-sref-active="active">
-                            <a ui-sref="transaction" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span data-translate="global.menu.entities.transaction">Transaction</span>
+                            <a ui-sref="transactionsByGroup" ng-click="vm.collapseNavbar()">
+                                <span class="glyphicon glyphicon-certificate"></span>&nbsp;
+                                <span data-translate="global.menu.transactionsByGroup">Transactions by group</span>
                             </a>
                         </li>
-                        <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
+                        <li ui-sref-active="active">
+                            <a ui-sref="transactionsByUser" ng-click="vm.collapseNavbar()">
+                                <span class="glyphicon glyphicon-user"></span>&nbsp;
+                                <span data-translate="global.menu.transactionsByUser">Transactions by user</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li ng-class="{active: vm.$state.includes('account')}" uib-dropdown class="dropdown pointer">
@@ -77,12 +87,6 @@
                             </a>
                         </li>
                         <li ui-sref-active="active" ng-switch-when="false">
-                            <a href="" ng-click="vm.login()" id="login">
-                                <span class="glyphicon glyphicon-log-in"></span>&nbsp;
-                                <span data-translate="global.menu.account.login">Sign in</span>
-                            </a>
-                        </li>
-                        <li ui-sref-active="active" ng-switch-when="false">
                             <a ui-sref="register" ng-click="vm.collapseNavbar()">
                                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;
                                 <span data-translate="global.menu.account.register">Register</span>
@@ -91,6 +95,7 @@
                     </ul>
                 </li>
                 <li ng-class="{active: vm.$state.includes('admin')}"  ng-switch-when="true" has-authority="ROLE_ADMIN" uib-dropdown class="dropdown pointer">
+
                     <a class="dropdown-toggle" uib-dropdown-toggle href="" id="admin-menu">
                         <span>
                             <span class="glyphicon glyphicon-tower"></span>
@@ -99,6 +104,12 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu>
+                        <li ui-sref-active="active">
+                            <a ui-sref="transaction" ng-click="vm.collapseNavbar()">
+                                <span class="glyphicon glyphicon-euro"></span>&nbsp;
+                                <span data-translate="global.menu.allTransactions">All transactions</span>
+                            </a>
+                        </li>
                         <li ui-sref-active="active">
                             <a ui-sref="user-management" ng-click="vm.collapseNavbar()">
                                 <span class="glyphicon glyphicon-user"></span>&nbsp;
@@ -141,7 +152,6 @@
                                 <span data-translate="global.menu.admin.apidocs">API</span>
                             </a>
                         </li>
-                        <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
                         <li ng-hide="vm.inProduction">
                             <a href='/h2-console' target="_tab" ng-click="vm.collapseNavbar()">
                                 <span class="glyphicon glyphicon-hdd"></span>&nbsp;

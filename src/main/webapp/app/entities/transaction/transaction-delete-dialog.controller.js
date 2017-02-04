@@ -13,13 +13,13 @@
         vm.transaction = entity;
         vm.clear = clear;
         vm.confirmDelete = confirmDelete;
-        
+
         function clear () {
             $uibModalInstance.dismiss('cancel');
         }
 
         function confirmDelete (id) {
-            Transaction.delete({id: id},
+            Transaction.transactions.delete({id: id},
                 function () {
                     $uibModalInstance.close(true);
                 });

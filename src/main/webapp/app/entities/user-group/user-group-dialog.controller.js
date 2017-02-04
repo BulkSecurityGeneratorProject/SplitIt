@@ -5,31 +5,17 @@
         .module('splitItApp')
         .controller('UserGroupDialogController', UserGroupDialogController);
 
-    UserGroupDialogController.$inject = ['$filter','$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'UserGroup', 'User', 'Principal', 'Auth'];
+    UserGroupDialogController.$inject = ['$filter','$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'UserGroup', 'User'];
 
-    function UserGroupDialogController ($filter, $timeout, $scope, $stateParams, $uibModalInstance, entity, UserGroup, User, Principal, Auth ) {
+    function UserGroupDialogController ($filter, $timeout, $scope, $stateParams, $uibModalInstance, entity, UserGroup, User) {
         var vm = this;
-
 
         vm.userGroup = entity;
         vm.clear = clear;
         vm.datePickerOpenStatus = {};
         vm.openCalendar = openCalendar;
         vm.save = save;
-        vm.loggedInAccount = null;
-
-        Principal.identity().then(function(account) {
-            vm.loggedInAccount = copyAccount(account);
-        });
-
-        vm.users = User.query(function(){
-        if(!vm.userGroup.owner){
-            vm.userGroup.owner = $filter('filter')(vm.users, {id: vm.loggedInAccount.id })[0];
-        }
-
-
-        });
-
+        vm.users = User.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -63,21 +49,5 @@
         function openCalendar (date) {
             vm.datePickerOpenStatus[date] = true;
         }
-
-        var copyAccount = function (account) {
-            return {
-                activated: account.activated,
-                email: account.email,
-                firstName: account.firstName,
-                langKey: account.langKey,
-                lastName: account.lastName,
-                login: account.login,
-                id: account.id
-            };
-        };
-
-
-
-
     }
 })();

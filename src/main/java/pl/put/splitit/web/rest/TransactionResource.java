@@ -2,7 +2,9 @@ package pl.put.splitit.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import pl.put.splitit.domain.Transaction;
+import pl.put.splitit.domain.User;
 import pl.put.splitit.service.TransactionService;
+import pl.put.splitit.service.UserService;
 import pl.put.splitit.web.rest.util.HeaderUtil;
 import pl.put.splitit.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
@@ -29,9 +31,11 @@ import java.util.Optional;
 public class TransactionResource {
 
     private final Logger log = LoggerFactory.getLogger(TransactionResource.class);
-        
+
     @Inject
     private TransactionService transactionService;
+    @Inject
+    private UserService userService;
 
     /**
      * POST  /transactions : Create a new transaction.

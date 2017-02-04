@@ -378,7 +378,8 @@ public class AccountResourceIntTest {
             "funky@example.com",    // e-mail
             true,                   // activated
             "pl",                   // langKey
-            new HashSet<>(Arrays.asList(AuthoritiesConstants.USER))
+            new HashSet<>(Arrays.asList(AuthoritiesConstants.USER)),
+            new Long(0)
         );
 
         restUserMockMvc.perform(

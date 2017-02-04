@@ -8,8 +8,9 @@
 
     function Transaction ($resource, DateUtils) {
         var resourceUrl =  'api/transactions/:id';
+        var myTransactionsResourceUrl =  'api/users/:login/transactions';
 
-        return $resource(resourceUrl, {}, {
+        return { transactions : $resource(resourceUrl, {}, {
             'query': { method: 'GET', isArray: true},
             'get': {
                 method: 'GET',
@@ -37,6 +38,29 @@
                     return angular.toJson(copy);
                 }
             }
-        });
+        }), myTransactions : $resource(myTransactionsResourceUrl, {login : '@login'}, {
+                 'query': { method: 'GET', isArray: true},
+                 'get': {
+                     method: 'GET',
+                     transformResponse: function (data) {
+                         if (data) {
+                             data = angular.fromJson(data);
+                             data.date = DateUtils.convertLocalDateFromServer(data.date);
+                         }
+                         return data;
+                     }
+         }}), userTr : $resource(myTransactionsResourceUrl, {login : '@login'}, {
+                 'query': { method: 'GET', isArray: true},
+                 'get': {
+                     method: 'GET',
+                     transformResponse: function (data) {
+                         if (data) {
+                             data = angular.fromJson(data);
+                             data.date = DateUtils.convertLocalDateFromServer(data.date);
+                         }
+                         return data;
+                     }
+                 }})
+                  }
     }
 })();

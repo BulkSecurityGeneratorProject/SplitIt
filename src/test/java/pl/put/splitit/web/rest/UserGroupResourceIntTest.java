@@ -168,8 +168,6 @@ public class UserGroupResourceIntTest {
     @Transactional
     public void checkCreationDateIsRequired() throws Exception {
         int databaseSizeBeforeTest = userGroupRepository.findAll().size();
-        // set the field null
-        userGroup.setCreationDate(null);
 
         // Create the UserGroup, which fails.
 

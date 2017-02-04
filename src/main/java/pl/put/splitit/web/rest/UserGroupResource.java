@@ -8,12 +8,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pl.put.splitit.domain.Transaction;
 import pl.put.splitit.domain.User;
 import pl.put.splitit.domain.UserGroup;
 import pl.put.splitit.service.TransactionService;
 import pl.put.splitit.service.UserGroupService;
+import pl.put.splitit.service.UserService;
 import pl.put.splitit.web.rest.util.HeaderUtil;
 import pl.put.splitit.web.rest.util.PaginationUtil;
 
@@ -39,6 +42,9 @@ public class UserGroupResource {
     private UserGroupService userGroupService;
 
     @Inject
+    private UserService userService;
+
+    @Inject
     private TransactionService transactionService;
 
     /**
@@ -55,6 +61,12 @@ public class UserGroupResource {
         if (userGroup.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("userGroup", "idexists", "A new userGroup cannot already have an ID")).body(null);
         }
+
+        User owner = userService.getUserWithAuthorities();
+        userGroup.setOwner(owner);
+        userGroup.getUsers().add(owner);
+
+
         UserGroup result = userGroupService.save(userGroup);
         return ResponseEntity.created(new URI("/api/groups/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("userGroup", result.getId().toString()))

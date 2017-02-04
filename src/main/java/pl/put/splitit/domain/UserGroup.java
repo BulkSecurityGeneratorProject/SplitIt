@@ -2,6 +2,7 @@ package pl.put.splitit.domain;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -33,15 +34,14 @@ public class UserGroup implements Serializable {
     @Column(name = "is_private", nullable = false)
     private Boolean isPrivate;
 
-    @NotNull
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDate creationDate;
 
     @ManyToOne
-    @NotNull
+   /* @NotNull*/
     private User owner;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "user_group_users",
         joinColumns = @JoinColumn(name = "user_groups_id", referencedColumnName = "ID"),
@@ -89,10 +89,6 @@ public class UserGroup implements Serializable {
     public UserGroup creationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
         return this;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
     }
 
     public User getOwner() {
@@ -160,4 +156,10 @@ public class UserGroup implements Serializable {
             ", creationDate='" + creationDate + "'" +
             '}';
     }
+
+    @PrePersist
+    protected void onCreate() {
+        creationDate = LocalDate.now();
+    }
+
 }

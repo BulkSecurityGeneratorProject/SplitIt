@@ -2,27 +2,31 @@
     "splitItApp": {
         "transaction" : {
             "home": {
-                "title": "Transactions",
-                "createLabel": "Dodaj Transaction",
-                "createOrEditLabel": "Dodaj lub edytuj: Transaction",
-                "search": "Search for Transaction"
+                "title": "Transakcje",
+                "createLabel": "Dodaj transakcję",
+                "createOrEditLabel": "Dodaj lub edytuj transakcję",
+                "search": "Szukaj transakcji"
             },
-            "created": "A new Transaction is created with identifier {{ param }}",
-            "updated": "A Transaction is updated with identifier {{ param }}",
-            "deleted": "A Transaction is deleted with identifier {{ param }}",
+            "created": "Transakcja została stworzona.",
+            "updated": "Transakcja została zaktualizowana.",
+            "deleted": "Transakcja została usunięta.",
             "delete": {
-                "question": "Czy na pewno chcesz usunąć Transaction {{ id }}?"
+                "question": "Czy na pewno chcesz usunąć transakcję?"
             },
             "detail": {
-                "title": "Transaction"
+                "title": "Transakcja"
             },
-            "name": "Name",
-            "description": "Description",
-            "date": "Date",
-            "value": "Value",
-            "debitor": "Debitor",
-            "creditor": "Creditor",
-            "userGroup": "User Group"
+            "error": {
+                "debitorCreditorEqual": "Pożyczający i dłużnik nie mogą być tą samą osobą.",
+                "debitorCreditorNotCurrentUser" : "Zalogowany użytkownik musi być pożyczającym lub dłużnikiem."
+            },
+            "name": "Nazwa",
+            "description": "Opis",
+            "date": "Data",
+            "value": "Kwota [zł]",
+            "debitor": "Dłużnik",
+            "creditor": "Pożyczający",
+            "userGroup": "Grupa"
         }
     }
 }

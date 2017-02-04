@@ -5,9 +5,9 @@
         .module('splitItApp')
         .controller('NavbarController', NavbarController);
 
-    NavbarController.$inject = ['$state', 'Auth', 'Principal', 'ProfileService', 'LoginService'];
+    NavbarController.$inject = ['$state', 'Auth', 'Principal', 'ProfileService', 'HomeService'];
 
-    function NavbarController ($state, Auth, Principal, ProfileService, LoginService) {
+    function NavbarController ($state, Auth, Principal, ProfileService, HomeService) {
         var vm = this;
 
         vm.isNavbarCollapsed = true;
@@ -26,7 +26,7 @@
 
         function login() {
             collapseNavbar();
-            LoginService.open();
+            HomeService.open();
         }
 
         function logout() {

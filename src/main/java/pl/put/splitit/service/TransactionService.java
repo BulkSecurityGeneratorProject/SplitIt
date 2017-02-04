@@ -56,6 +56,19 @@ public class TransactionService {
         return result;
     }
 
+    /**
+     * Get all user transactions.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<Transaction> findAllByUser(String login,Pageable pageable) {
+        log.debug("Request to get all user Transactions");
+        Page<Transaction> result = transactionRepository.findAllByUser(login,pageable);
+        return result;
+    }
+
     @Transactional(readOnly = true)
     public Page<Transaction> findAllByUserAndType(String login, TransactionType type, Pageable pageable) {
         log.debug("Request to get all Transactions of user: " + login + " and type: " + type);

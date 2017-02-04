@@ -246,7 +246,7 @@ public class UserResource {
 
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/groups")
     @Timed
-    public ResponseEntity<Page<UserGroup>> getUserGroups(@PathVariable String login, Pageable pageable) throws URISyntaxException {
+    public ResponseEntity<List<UserGroup>> getUserGroups(@PathVariable String login, Pageable pageable) throws URISyntaxException {
         log.debug("REST request to get groups of user: {}", login);
         Optional<User> user = userService.getUserWithAuthoritiesByLogin(login);
 
@@ -257,12 +257,12 @@ public class UserResource {
 
         Page<UserGroup> groups = userGroupService.findAllGroupsOfUser(login, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(groups, String.format("/api/users/%s/groups", login));
-        return new ResponseEntity<>(groups, headers, HttpStatus.OK);
+        return new ResponseEntity<>(groups.getContent(), headers, HttpStatus.OK);
     }
 
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/transactions")
     @Timed
-    public ResponseEntity<Page<Transaction>> getUserTransactions(
+    public ResponseEntity<List<Transaction>> getUserTransactions(
         @PathVariable String login,
         @RequestParam(value = "type", required = false, defaultValue = "both") String transactionType,
         Pageable pageable) throws URISyntaxException {
@@ -277,7 +277,7 @@ public class UserResource {
 
         Page<Transaction> transactions = transactionService.findAllByUserAndType(login, TransactionType.getType(transactionType), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(transactions, String.format("/api/users/%s/transactions", login));
-        return new ResponseEntity<>(transactions, headers, HttpStatus.OK);
+        return new ResponseEntity<>(transactions.getContent(), headers, HttpStatus.OK);
     }
 
 

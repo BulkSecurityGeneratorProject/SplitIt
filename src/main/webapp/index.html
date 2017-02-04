@@ -29,20 +29,20 @@
             <!-- Angular views -->
         </div>
 
-        <div class="footer" ng-cloak>
-            <p data-translate="footer">This is your footer</p>
-        </div>
-    </div>
+        <!-- <div class="footer" ng-cloak>
+             <p data-translate="footer">This is your footer</p>
+         </div>-->
+     </div>
 
-    <!-- Google Analytics: uncomment and change UA-XXXXX-X to be your site's ID.
-    <script>
-        (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-        function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-        e.src='//www.google-analytics.com/analytics.js';
-        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-        ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>-->
+     <!-- Google Analytics: uncomment and change UA-XXXXX-X to be your site's ID.
+     <script>
+         (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+         function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+         e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+         e.src='//www.google-analytics.com/analytics.js';
+         r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+         ga('create','UA-XXXXX-X');ga('send','pageview');
+     </script>-->
 
     <!-- build:js app/vendor.js -->
     <!-- bower:js -->
@@ -93,6 +93,7 @@
     <script src="app/layouts/error/error.state.js"></script>
     <script src="app/home/home.state.js"></script>
     <script src="app/home/home.controller.js"></script>
+    <script src="app/home/home.service.js"></script>
     <script src="app/entities/group/group-dialog.controller.js"></script>
     <script src="app/entities/group/group-detail.controller.js"></script>
     <script src="app/entities/group/group-delete-dialog.controller.js"></script>
@@ -104,7 +105,10 @@
     <script src="app/entities/transaction/transaction-delete-dialog.controller.js"></script>
     <script src="app/entities/transaction/transaction.state.js"></script>
     <script src="app/entities/transaction/transaction.service.js"></script>
+    <script src="app/entities/transaction/summary.service.js"></script>
     <script src="app/entities/transaction/transaction.controller.js"></script>
+    <script src="app/entities/transaction/transaction-by-group-dialog.controller.js"></script>
+    <script src="app/entities/transaction/transaction-by-user-dialog.controller.js"></script>
     <script src="app/entities/entity.state.js"></script>
     <script src="app/components/util/truncate-words.filter.js"></script>
     <script src="app/components/util/truncate-characters.filter.js"></script>
@@ -117,8 +121,6 @@
     <script src="app/components/util/data-util.service.js"></script>
     <script src="app/components/util/capitalize.filter.js"></script>
     <script src="app/components/util/base64.service.js"></script>
-    <script src="app/components/login/login.service.js"></script>
-    <script src="app/components/login/login.controller.js"></script>
     <script src="app/components/language/language.service.js"></script>
     <script src="app/components/language/language.filter.js"></script>
     <script src="app/components/language/language.controller.js"></script>

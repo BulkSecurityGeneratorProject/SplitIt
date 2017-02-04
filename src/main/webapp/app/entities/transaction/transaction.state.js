@@ -10,10 +10,10 @@
     function stateConfig($stateProvider) {
         $stateProvider
         .state('transaction', {
-            parent: 'entity',
+            parent: 'admin',
             url: '/transaction?page&sort&search',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: ['ROLE_ADMIN'],
                 pageTitle: 'splitItApp.transaction.home.title'
             },
             views: {
@@ -50,9 +50,182 @@
                     return $translate.refresh();
                 }]
             }
-        })
+        }).state('transactionsByGroup', {
+                parent: 'entity',
+                url: '/transactionsByGroup',
+                data: {
+                    authorities: ['ROLE_USER'],
+                    pageTitle: 'splitItApp.userGroup.home.transactionsByGroup'
+                },
+                views: {
+                    'content@': {
+                        templateUrl: 'app/entities/transaction/groups-transactions.html',
+                        controller: 'UserGroupController',
+                        controllerAs: 'vm'
+                    }
+                },
+                params: {
+                    page: {
+                        value: '1',
+                        squash: true
+                    },
+                    sort: {
+                        value: 'id,asc',
+                        squash: true
+                    },
+                    search: null
+                },
+                resolve: {
+                    pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
+                        return {
+                            page: PaginationUtil.parsePage($stateParams.page),
+                            sort: $stateParams.sort,
+                            predicate: PaginationUtil.parsePredicate($stateParams.sort),
+                            ascending: PaginationUtil.parseAscending($stateParams.sort),
+                            search: $stateParams.search
+                        };
+                    }],
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                        $translatePartialLoader.addPart('userGroup');
+                        $translatePartialLoader.addPart('global');
+                        $translatePartialLoader.addPart('summary');
+                        return $translate.refresh();
+                    }]
+                }
+            }).state('transactionsByGroupView', {
+                          parent: 'transactionsByGroup',
+                          url: '/transactionsByGroupView/{id}',
+                          data: {
+                              authorities: ['ROLE_USER']
+                          },
+                          onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                              $uibModal.open({
+                                  templateUrl: 'app/entities/transaction/group-transactions-dialog.html',
+                                  controller: 'TransactionByGroupDialogController',
+                                  controllerAs: 'vm',
+                                  backdrop: 'static',
+                                  size: 'lg',
+                                  resolve: {
+                                      translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                                          $translatePartialLoader.addPart('summary');
+                                          $translatePartialLoader.addPart('global');
+                                          return $translate.refresh();
+                                      }]
+                                  }
+                              }).result.then(function() {
+                                  $state.go('^', {}, { reload: false });
+                              }, function() {
+                                  $state.go('^');
+                              });
+                          }]
+                      })
+        .state('transactionsByUser', {
+           parent: 'entity',
+           url: '/transactionsByUser?page&sort',
+           data: {
+               authorities: ['ROLE_ADMIN'],
+               pageTitle: 'userManagement.home.title'
+           },
+           views: {
+               'content@': {
+                   templateUrl: 'app/entities/transaction/users-transactions.html',
+                   controller: 'UserManagementController',
+                   controllerAs: 'vm'
+               }
+           },            params: {
+               page: {
+                   value: '1',
+                   squash: true
+               },
+               sort: {
+                   value: 'id,asc',
+                   squash: true
+               }
+           },
+           resolve: {
+               pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
+                   return {
+                       page: PaginationUtil.parsePage($stateParams.page),
+                       sort: $stateParams.sort,
+                       predicate: PaginationUtil.parsePredicate($stateParams.sort),
+                       ascending: PaginationUtil.parseAscending($stateParams.sort)
+                   };
+               }],
+               translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                   $translatePartialLoader.addPart('user-management');
+                   return $translate.refresh();
+               }]
+
+           }}).state('transactionsByUserView', {
+                        parent: 'transactionsByUser',
+                        url: '/transactionsByUserView/{login2}',
+                        data: {
+                            authorities: ['ROLE_USER']
+                        },
+                        onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                            $uibModal.open({
+                                templateUrl: 'app/entities/transaction/users-transactions-dialog.html',
+                                controller: 'TransactionByUserDialogController',
+                                controllerAs: 'vm',
+                                backdrop: 'static',
+                                size: 'lg',
+                                resolve: {
+                                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                                        $translatePartialLoader.addPart('summary');
+                                        $translatePartialLoader.addPart('global');
+                                        return $translate.refresh();
+                                    }]
+                                }
+                            }).result.then(function() {
+                                $state.go('^', {}, { reload: false });
+                            }, function() {
+                                $state.go('^');
+                            });
+                        }]
+                    }).state('myTransactions', {
+                      parent: 'entity',
+                      url: '/myTransactions?page&sort&search',
+                      data: {
+                          authorities: ['ROLE_USER'],
+                          pageTitle: 'splitItApp.transaction.home.title'
+                      },
+                      views: {
+                          'content@': {
+                              templateUrl: 'app/entities/transaction/transactions.html',
+                              controller: 'TransactionController',
+                              controllerAs: 'vm'
+                          }
+                      },
+                      params: {
+                          page: {
+                              value: '1',
+                              squash: true
+                          },
+                          sort: {
+                              value: 'id,asc',
+                              squash: true
+                          },
+                          search: null
+                      },
+                      resolve: {
+                          pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
+                              return {
+                                  page: PaginationUtil.parsePage($stateParams.page),
+                                  sort: $stateParams.sort,
+                                  predicate: PaginationUtil.parsePredicate($stateParams.sort),
+                                  ascending: PaginationUtil.parseAscending($stateParams.sort),
+                                  search: $stateParams.search
+                              };
+                          }],
+                          translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                              $translatePartialLoader.addPart('transaction');
+                              $translatePartialLoader.addPart('global');
+                              return $translate.refresh();
+                          }]
+                      }
+                  })
         .state('transaction-detail', {
-            parent: 'entity',
+            parent: 'myTransactions',
             url: '/transaction/{id}',
             data: {
                 authorities: ['ROLE_USER'],
@@ -71,7 +244,7 @@
                     return $translate.refresh();
                 }],
                 entity: ['$stateParams', 'Transaction', function($stateParams, Transaction) {
-                    return Transaction.get({id : $stateParams.id}).$promise;
+                    return Transaction.transactions.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
@@ -98,7 +271,7 @@
                     size: 'lg',
                     resolve: {
                         entity: ['Transaction', function(Transaction) {
-                            return Transaction.get({id : $stateParams.id}).$promise;
+                            return Transaction.transactions.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
@@ -109,7 +282,7 @@
             }]
         })
         .state('transaction.new', {
-            parent: 'transaction',
+            parent: 'myTransactions',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']
@@ -133,14 +306,14 @@
                         }
                     }
                 }).result.then(function() {
-                    $state.go('transaction', null, { reload: 'transaction' });
+                    $state.go('myTransactions', null, { reload: 'myTransactions' });
                 }, function() {
-                    $state.go('transaction');
+                    $state.go('myTransactions');
                 });
             }]
         })
         .state('transaction.edit', {
-            parent: 'transaction',
+            parent: 'myTransactions',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_USER']
@@ -154,18 +327,18 @@
                     size: 'lg',
                     resolve: {
                         entity: ['Transaction', function(Transaction) {
-                            return Transaction.get({id : $stateParams.id}).$promise;
+                            return Transaction.transactions.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('transaction', null, { reload: 'transaction' });
+                    $state.go('myTransactions', null, { reload: 'myTransactions' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
         .state('transaction.delete', {
-            parent: 'transaction',
+            parent: 'myTransactions',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
@@ -178,11 +351,11 @@
                     size: 'md',
                     resolve: {
                         entity: ['Transaction', function(Transaction) {
-                            return Transaction.get({id : $stateParams.id}).$promise;
+                            return Transaction.transactions.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('transaction', null, { reload: 'transaction' });
+                    $state.go('myTransactions', null, { reload: 'myTransactions' });
                 }, function() {
                     $state.go('^');
                 });
