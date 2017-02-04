@@ -123,7 +123,7 @@
            parent: 'entity',
            url: '/transactionsByUser?page&sort',
            data: {
-               authorities: ['ROLE_ADMIN'],
+               authorities: ['ROLE_USER'],
                pageTitle: 'userManagement.home.title'
            },
            views: {
